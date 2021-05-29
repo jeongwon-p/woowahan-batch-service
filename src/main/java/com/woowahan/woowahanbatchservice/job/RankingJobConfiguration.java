@@ -1,19 +1,20 @@
 package com.woowahan.woowahanbatchservice.job;
 
+import com.woowahan.woowahanbatchservice.User;
 import com.woowahan.woowahanbatchservice.UserScore;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
-import org.springframework.batch.item.ItemWriter;
-import org.springframework.batch.item.database.JdbcCursorItemReader;
-import org.springframework.batch.item.database.builder.JdbcBatchItemWriterBuilder;
-import org.springframework.batch.item.database.builder.JdbcCursorItemReaderBuilder;
+import org.springframework.batch.item.ItemProcessor;
+import org.springframework.batch.item.database.JpaItemWriter;
+import org.springframework.batch.item.database.JpaPagingItemReader;
+import org.springframework.batch.item.database.builder.JpaPagingItemReaderBuilder;
 import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 
+import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 @Configuration
@@ -21,29 +22,33 @@ public class RankingJobConfiguration {
 
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;
-    private final DataSource dataSource;
 
     private static final int chunkSize = 10;
 
     public RankingJobConfiguration(
             JobBuilderFactory jobBuilderFactory,
-            StepBuilderFactory stepBuilderFactory,
-            DataSource dataSource
+            StepBuilderFactory stepBuilderFactory
     ) {
         this.jobBuilderFactory = jobBuilderFactory;
         this.stepBuilderFactory = stepBuilderFactory;
-        this.dataSource = dataSource;
     }
 
     @Bean
     public Job rankingJob() {
         return jobBuilderFactory.get("rankingJob")
                 .start(scoreArticleStep())
-                .next(scoreCommentStep())
                 .next(rankingStep())
                 .build();
     }
 
+    @Bean
+    public Step scoreArticleStep() {
+        return stepBuilderFactory.get("scoreArticleStep")
+                .tasklet(new OuterTasklet())
+                .build();
+    }
+
+    /*
     @Bean
     public Step scoreArticleStep() {
         return stepBuilderFactory.get("scoreArticleStep")
@@ -71,12 +76,12 @@ public class RankingJobConfiguration {
 
     private ItemWriter<UserScore> jdbcCursorItemWriter() {
         return new JdbcBatchItemWriterBuilder<UserScore>()
+                .beanMapped()
                 .dataSource(dataSource)
                 .sql("update user set score = :score where email_id = :userId")
-                .beanMapped()
+                .assertUpdates(true)
                 .build();
     }
-
     @Bean
     public Step scoreCommentStep() {
         return stepBuilderFactory.get("scoreCommentStep")
@@ -86,6 +91,7 @@ public class RankingJobConfiguration {
                 .build();
     }
 
+     */
     @Bean
     public Step rankingStep() {
         return stepBuilderFactory.get("rankingStep")
