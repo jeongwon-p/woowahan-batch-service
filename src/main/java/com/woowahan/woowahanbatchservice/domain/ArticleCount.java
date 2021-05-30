@@ -1,21 +1,25 @@
 package com.woowahan.woowahanbatchservice.domain;
 
-public class ArticleCount {
+import java.math.BigDecimal;
 
-    private String userId;
+public class ArticleCount implements UserScoreAggregateItem{
 
-    private long articleCount;
+    private final String userId;
+
+    private final long articleCount;
 
     public ArticleCount(String userId, long articleCount) {
         this.userId = userId;
         this.articleCount = articleCount;
     }
 
-    public String getUserId() {
-        return userId;
+    @Override
+    public BigDecimal baseCount() {
+        return BigDecimal.valueOf(articleCount);
     }
 
-    public long getArticleCount() {
-        return articleCount;
+    @Override
+    public String getUserId() {
+        return userId;
     }
 }

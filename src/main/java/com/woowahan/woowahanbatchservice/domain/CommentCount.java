@@ -1,21 +1,25 @@
 package com.woowahan.woowahanbatchservice.domain;
 
-public class CommentCount {
+import java.math.BigDecimal;
 
-    private String userId;
+public class CommentCount implements UserScoreAggregateItem {
 
-    private long commentCount;
+    private final String userId;
+
+    private final long commentCount;
 
     public CommentCount(String userId, long commentCount) {
         this.userId = userId;
         this.commentCount = commentCount;
     }
 
-    public String getUserId() {
-        return userId;
+    @Override
+    public BigDecimal baseCount() {
+        return BigDecimal.valueOf(commentCount);
     }
 
-    public long getCommentCount() {
-        return commentCount;
+    @Override
+    public String getUserId() {
+        return userId;
     }
 }

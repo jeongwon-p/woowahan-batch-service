@@ -13,9 +13,9 @@ import java.util.List;
 public interface CommentRepository extends JpaRepository<Comment, String> {
     @Query(
             " select new com.woowahan.woowahanbatchservice.domain.CommentCount(a.userId, count(a)) " +
-                    "from Comment a " +
-                    "where a.createDateTime >= :beginDateTime " +
-                    "and a.createDateTime < :endDateTime " +
-                    "group by a.userId ")
+            "   from Comment a " +
+            "  where a.createDateTime >= :beginDateTime " +
+            "    and a.createDateTime < :endDateTime " +
+            "  group by a.userId ")
     List<CommentCount> getCommentCountGroupByUserIdBetween(LocalDateTime beginDateTime, LocalDateTime endDateTime);
 }

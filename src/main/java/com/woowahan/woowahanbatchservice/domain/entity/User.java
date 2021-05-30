@@ -4,6 +4,7 @@ import com.woowahan.woowahanbatchservice.common.BooleanToYnConverter;
 import org.hibernate.annotations.Immutable;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.Objects;
 
 @Entity
@@ -64,14 +65,25 @@ public class User {
         return Objects.hash(emailId);
     }
 
-    public User updateScore(long score){
+    public User updateScore(BigDecimal score){
         return new User(
                 this.emailId,
                 this.hidden,
                 this.name,
                 this.password,
                 this.rank,
-                Math.toIntExact(score)
+                score.intValue()
+        );
+    }
+
+    public User updateRank(int newRank){
+        return new User(
+                this.emailId,
+                this.hidden,
+                this.name,
+                this.password,
+                newRank,
+                this.score
         );
     }
 

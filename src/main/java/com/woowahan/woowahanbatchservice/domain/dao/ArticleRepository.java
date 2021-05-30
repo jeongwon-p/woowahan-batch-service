@@ -13,9 +13,9 @@ import java.util.List;
 public interface ArticleRepository extends JpaRepository<Article, String> {
     @Query(
             " select new com.woowahan.woowahanbatchservice.domain.ArticleCount(a.userId, count(a)) " +
-                    "from Article a " +
-                    "where a.createDateTime >= :beginDateTime " +
-                    "and a.createDateTime < :endDateTime " +
-                    "group by a.userId ")
+            "   from Article a " +
+            "  where a.createDateTime >= :beginDateTime " +
+            "    and a.createDateTime < :endDateTime " +
+            "  group by a.userId ")
     List<ArticleCount> getArticleCountGroupByUserIdBetween(LocalDateTime beginDateTime, LocalDateTime endDateTime);
 }

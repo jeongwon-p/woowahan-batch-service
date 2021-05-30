@@ -8,7 +8,6 @@ import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.step.tasklet.Tasklet;
-import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -38,19 +37,19 @@ public class RankingJobConfiguration {
     @Bean
     public Job rankingJob() {
         return jobBuilderFactory.get("rankingJob")
-                .start(scoreArticleStep())
+                .start(scoreAndRankStep())
                 .build();
     }
 
     @Bean
-    public Step scoreArticleStep() {
-        return stepBuilderFactory.get("scoreArticleStep")
-                .tasklet(scoreTasklet(articleDao, commentDao, userDao))
+    public Step scoreAndRankStep() {
+        return stepBuilderFactory.get("scoreAndRankStep")
+                .tasklet(scoreAndRankTasklet(articleDao, commentDao, userDao))
                 .build();
     }
 
     @Bean
-    public Tasklet scoreTasklet(ArticleRepository articleDao, CommentRepository commentDao, UserRepository userDao) {
-        return new ScoreTasklet(articleDao, commentDao, userDao);
+    public Tasklet scoreAndRankTasklet(ArticleRepository articleDao, CommentRepository commentDao, UserRepository userDao) {
+        return new ScoreAndRankTasklet(articleDao, commentDao, userDao);
     }
 }
