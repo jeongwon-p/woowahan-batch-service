@@ -1,11 +1,11 @@
-package com.woowahan.woowahanbatchservice;
+package com.woowahan.woowahanbatchservice.domain.entity;
 
+import com.woowahan.woowahanbatchservice.common.BooleanToYnConverter;
 import org.hibernate.annotations.Immutable;
 
 import javax.persistence.*;
 import java.util.Objects;
 
-@Immutable
 @Entity
 @Table(
         name = "user"
@@ -17,6 +17,7 @@ public class User {
     private String emailId;
 
     @Column(name = "hide_yn", columnDefinition = "varchar(1) default 'N'")
+    @Convert(converter = BooleanToYnConverter.class)
     private boolean hidden;
 
     @Column(name = "name")
@@ -34,7 +35,7 @@ public class User {
     public User() {
     }
 
-    public User(
+    private User(
             String emailId,
             boolean hidden,
             String name,
@@ -61,6 +62,17 @@ public class User {
     @Override
     public int hashCode() {
         return Objects.hash(emailId);
+    }
+
+    public User updateScore(long score){
+        return new User(
+                this.emailId,
+                this.hidden,
+                this.name,
+                this.password,
+                this.rank,
+                Math.toIntExact(score)
+        );
     }
 
     public String getEmailId() {
