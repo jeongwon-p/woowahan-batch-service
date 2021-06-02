@@ -40,15 +40,15 @@ public class ScoreAndRankTasklet implements Tasklet {
         LocalDateTime endDateTime = LocalDate.now().atStartOfDay();
         LocalDateTime beginDateTime = endDateTime.minusDays(30);
 
-        Map<String, BigDecimal> articleCountByUserId = this.groupingScoreItems(articleDao
+        Map<String, BigDecimal> articleScoreByUserId = this.groupingScoreItems(articleDao
                 .getArticleCountGroupByUserIdBetween(beginDateTime, endDateTime), ARTICLE_WEIGHT);
-        Map<String, BigDecimal> commentCountByUserId = this.groupingScoreItems(commentDao
+        Map<String, BigDecimal> commentScoreByUserId = this.groupingScoreItems(commentDao
                 .getCommentCountGroupByUserIdBetween(beginDateTime, endDateTime), COMMENT_WEIGHT);
 
         List<User> scoredUsers = userDao.findAll().stream()
                 .map(user -> user.updateScore(
-                        articleCountByUserId.getOrDefault(user.getEmailId(), BigDecimal.ZERO)
-                                .add(commentCountByUserId.getOrDefault(user.getEmailId(), BigDecimal.ZERO))
+                        articleScoreByUserId.getOrDefault(user.getEmailId(), BigDecimal.ZERO)
+                                .add(commentScoreByUserId.getOrDefault(user.getEmailId(), BigDecimal.ZERO))
                 ))
                 .sorted(Comparator.comparing(User::getScore).reversed())
                 .collect(Collectors.toList());
