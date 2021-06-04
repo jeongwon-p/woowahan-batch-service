@@ -1,5 +1,8 @@
 # woowahan-batch-service
-
+* [참고사항] woowahan-board-service -> woowahan-admin-service -> woowahan-frontend
+  -> (테스트 후 데이터 생성) -> woowahan-batch-service 순으로 각 서비스의 README.md 읽고 실행 시
+  번거로움 없이 진행 가능합니다.
+  
 본 프로젝트는 매일 새벽 1시에 Scheduler 가 동작되어 유저의 Score 와 Rank 를 갱신합니다.
 <br/><br/>
 
