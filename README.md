@@ -15,3 +15,9 @@
 4. ./gradlew build 을 실행합니다.
 5. java -jar build/libs/woowahan-batch-service-0.0.1-SNAPSHOT.jar version=1
 6. 배치 실행되면 배치 인스턴스가 Spring Batch META 테이블에 기록되어 같은 파라미터로는 재실행이 불가능합니다. 한번 이상 배치를 수행하고자 할때는 Spring Batch META 테이블 데이터를 삭제하거나 version 값을 1씩 증가시켜 실행합니다.
+
+#Code Convention
+* (Entity)
+1. Entity 의 @Id 필드명은 'id' 로 통일합니다.
+2. 각 Entity 가 Immutable 상태를 유지할 수 있도록 특별한 경우를 제외하고 Setter 제공을 금지합니다.
+3. Entity equals() 재정의 시 꼭 hashcode() 도 재정의 해주시길 바랍니다.
